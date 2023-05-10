@@ -14,10 +14,10 @@ const getAllUsers = async(req, res) => {
 //Get Single User By Using Id
 const getUser = async(req, res) =>{
     try {
-        const {id} = req.params;
-        const user = await User.findById(id);
+        const userId = req.params.id;
+        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({message: `Cannot Find Any User With ID ${id}`});
+            return res.status(404).json({message: `Cannot Find Any User With ID ${userId}`});
           }
         
         res.status(200).json(user);
@@ -45,16 +45,15 @@ const createUser = async (req, res) => {
 };
 
 //Update User
-
 const updateUser = async(req, res) => {
     try {
-        const {id} = req.params;
-        const user = await User.findByIdAndUpdate(id, req.body);
+        const userId = req.params.id;
+        const user = await User.findByIdAndUpdate(userId, req.body);
         // we cannot find any user in database
         if(!user){
-            return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
+            return res.status(404).json({message: `Cannot Find Any User With ID ${userId}`})
         }
-        const updatedUser = await User.findById(id);
+        const updatedUser = await User.findById(userId);
         console.log(updatedUser)
         res.status(200).json(updatedUser);
         
@@ -66,24 +65,25 @@ const updateUser = async(req, res) => {
 
 
 //Delete User
-
 const deleteUser = async(req, res) =>{
     try {
-        const {id} = req.params;
-        const user = await User.findByIdAndDelete(id);
+        const userId = req.params.id;
+        const user = await User.findByIdAndDelete(userId);
         if(!user){
-            return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
+            return res.status(404).json({message: `Cannot Find Any User With ID ${userId}`})
         }
         const deletedUser = await User.deleteOne({_id: req.params.id});
         console.log(deletedUser)
-        res.status(200).json(`message: "User Deleted Successfully"`);
+        res.status(200).json({message: "User Deleted Successfully"});
         // res.status(200).json(deletedUser);
+        // res.status(204).end();
 
     } catch (error) {
         res.status(500).json({message: error.message})
     }
 };
 
+//Exporting User Modules
 module.exports = {
     createUser,
     getAllUsers,
