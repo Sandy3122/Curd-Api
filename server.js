@@ -61,100 +61,93 @@ app.get('/', (req, res) => {
     res.send("Hello Node API")
 });
 
-//Getting All The Users
-app.get('/api/users', async(req, res) => {
-    try {
-        const user = await User.find({});
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
-})
-
-//Getting Users By Id
-app.get('/api/users/:id', async(req, res) =>{
-    try {
-        const {id} = req.params;
-        const user = await User.findById(id);
-        if (!user) {
-            return res.status(404).json({ message: 'User Not Found' });
-          }
-        
-        res.status(200).json(user);
-        console.log(user);
-    } catch (error) {
-        res.json({ message: error });
-        res.status(500).json({message: error.message})
-    }
-})
-
-//Posting data
-// app.post('/api/users', async(req, res) => {
-//     const uid = uuidv4();
-//     users = new Users({ username: req.body.username, age: req.body.age, hobbies: req.body.hobbies, uid})
+// //Getting All The Users
+// app.get('/api/users', async(req, res) => {
 //     try {
-//         const users = await users.save()
-//         res.status(200).json(users);
-        
+//         const user = await User.find({});
+//         res.status(200).json(user);
 //     } catch (error) {
-//         console.log(error.message);
 //         res.status(500).json({message: error.message})
 //     }
 // })
 
-//Creating User
-app.post('/api/users', async (req, res) => {
-    try {
-      const user = new User({
-        id: uuidv4(), // Generate a new uuidv4 identifier for the user
-        username: req.body.username,
-        age: req.body.age,
-        hobbies: req.body.hobbies,
-      });
-      const savedUser = await user.save();
-      res.status(201).json(savedUser);
-    } catch (err) {
-      res.status(400).json({ message: err.message });
-    }
-  });
-
-// update a product
-app.put('/api/users/:id', async(req, res) => {
-    try {
-        const {id} = req.params;
-        const user = await User.findByIdAndUpdate(id, req.body);
-        // we cannot find any user in database
-        if(!user){
-            return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
-        }
-        const updatedUser = await User.findById(id);
-        console.log(updatedUser)
-        res.status(200).json(updatedUser);
+// //Getting Users By Id
+// app.get('/api/users/:id', async(req, res) =>{
+//     try {
+//         const {id} = req.params;
+//         const user = await User.findById(id);
+//         if (!user) {
+//             return res.status(404).json({ message: 'User Not Found' });
+//           }
         
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({message: error.message})
-    }
-})
+//         res.status(200).json(user);
+//         console.log(user);
+//     } catch (error) {
+//         res.json({ message: error });
+//         res.status(500).json({message: error.message})
+//     }
+// })
 
-// delete a product
+// //Creating User
+// app.post('/api/users', async (req, res) => {
+//     try {
+//       const user = new User({
+//         id: uuidv4(), // Generate a new uuidv4 identifier for the user
+//         username: req.body.username,
+//         age: req.body.age,
+//         hobbies: req.body.hobbies,
+//       });
+//       const savedUser = await user.save();
+//       res.status(201).json(savedUser);
+//     } catch (err) {
+//       res.status(400).json({ message: err.message });
+//     }
+//   });
 
-app.delete('/api/users/:id', async(req, res) =>{
-    try {
-        const {id} = req.params;
-        const user = await User.findByIdAndDelete(id);
-        if(!user){
-            return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
-        }
-        const deletedUser = await User.deleteOne({_id: req.params.id});
-        console.log(deletedUser)
-        res.status(200).json(`message: "User Deleted Successfully"`);
-        // res.status(200).json(deletedUser);
+// // update a product
+// app.put('/api/users/:id', async(req, res) => {
+//     try {
+//         const {id} = req.params;
+//         const user = await User.findByIdAndUpdate(id, req.body);
+//         // we cannot find any user in database
+//         if(!user){
+//             return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
+//         }
+//         const updatedUser = await User.findById(id);
+//         console.log(updatedUser)
+//         res.status(200).json(updatedUser);
+        
+//     } catch (error) {
+//         console.log(error)
+//         res.status(500).json({message: error.message})
+//     }
+// })
 
-    } catch (error) {
-        res.status(500).json({message: error.message})
-    }
-})
+// // delete a product
+
+// app.delete('/api/users/:id', async(req, res) =>{
+//     try {
+//         const {id} = req.params;
+//         const user = await User.findByIdAndDelete(id);
+//         if(!user){
+//             return res.status(404).json({message: `Cannot Find Any User With ID ${id}`})
+//         }
+//         const deletedUser = await User.deleteOne({_id: req.params.id});
+//         console.log(deletedUser)
+//         res.status(200).json(`message: "User Deleted Successfully"`);
+//         // res.status(200).json(deletedUser);
+
+//     } catch (error) {
+//         res.status(500).json({message: error.message})
+//     }
+// })
+
+
+//Importing Routes
+const userRoutes = require("./routes/userRoutes.js")
+
+//Route Middlewares
+app.use("/api/users", userRoutes);
 
 
 
